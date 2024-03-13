@@ -30,7 +30,7 @@ func GenerateNonce(length int) (string, error) {
 		nonce[i] = letters[num.Int64()]
 	}
 
-	return string(nonce), nil
+	return "n_" + string(nonce), nil
 }
 
 func HmacSha256(key []byte, data []byte) string {
