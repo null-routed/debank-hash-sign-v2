@@ -7,9 +7,28 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/big"
+	"net/url"
+	"sort"
 	"strings"
 	"time"
 )
+
+func sortQueryString(queryString string) string {
+
+	params, _ := url.ParseQuery(queryString)
+
+	var paramKeys []string
+	for paramKey := range params {
+		paramKeys = append(paramKeys, paramKey)
+	}
+	sort.Strings(paramKeys)
+
+	var sortedQueryParams []string
+	for _, paramKey := range paramKeys {
+		sortedQueryParams = append(sortedQueryParams, fmt.Sprintf("%s=%s", paramKey, params[paramKey][0]))
+	}
+	return strings.Join(sortedQueryParams, "&")
+}
 
 func Sha256(data string) string {
 	h := sha256.New()
@@ -58,7 +77,7 @@ func GenerateSignature(requestMethod string, path string, parameters string) (st
 		"%s\n%s\n%s",
 		strings.ToUpper(requestMethod),
 		strings.ToLower(path),
-		strings.ToLower(parameters),
+		sortQueryString(strings.ToLower(parameters)),
 	)
 	requestParamsHash := Sha256(requestParams)
 
