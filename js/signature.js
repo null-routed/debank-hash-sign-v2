@@ -1,5 +1,16 @@
 const crypto = require("crypto");
 
+function sortQueryString(queryString) {
+  const params = new URLSearchParams(queryString);
+
+  const sortedParams = Array.from(params).sort((a, b) =>
+    a[0].localeCompare(b[0])
+  );
+  const sortedQueryString = new URLSearchParams(sortedParams).toString();
+
+  return sortedQueryString;
+}
+
 function sha256(data) {
   return crypto.createHash("sha256").update(data);
 }
@@ -27,7 +38,9 @@ function generateSignature(requestMethod, path, parameters) {
   const timestamp = Math.floor(Date.now() / 1000);
   const randStr = `debank-api\n${nonce}\n${timestamp}`;
   const randStrHash = encodeText(sha256(randStr).digest("hex"));
-  const requestParams = `${requestMethod.toUpperCase()}\n${path.toLowerCase()}\n${parameters.toLowerCase()}`;
+  const requestParams = `${requestMethod.toUpperCase()}\n${path.toLowerCase()}\n${sortQueryString(
+    parameters.toLowerCase()
+  )}`;
   const requestParamsHash = encodeText(sha256(requestParams).digest("hex"));
 
   const signature = hmacSha256(randStrHash, requestParamsHash);
