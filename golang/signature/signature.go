@@ -61,7 +61,7 @@ func HmacSha256(key []byte, data []byte) string {
 }
 
 func GenerateSignature(requestMethod string, path string, parameters string) (string, int64, string, error) {
-	nonce, err := GenerateNonce(32)
+	nonce, err := GenerateNonce(40)
 	if err != nil {
 		return "", 0, "", err
 	}

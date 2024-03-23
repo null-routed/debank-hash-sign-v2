@@ -19,7 +19,7 @@ function encodeText(text) {
   return new TextEncoder().encode(text);
 }
 
-function generateNonce(length = 32) {
+function generateNonce(length = 40) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let nonce = "";
