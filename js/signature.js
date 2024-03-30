@@ -6,7 +6,9 @@ function sortQueryString(queryString) {
   const sortedParams = Array.from(params).sort((a, b) =>
     a[0].localeCompare(b[0])
   );
-  const sortedQueryString = new URLSearchParams(sortedParams).toString();
+  const sortedQueryString = sortedParams
+    .map((param) => `${param[0]}=${param[1]}`)
+    .join("&");
 
   return sortedQueryString;
 }
@@ -42,7 +44,6 @@ function generateSignature(requestMethod, path, parameters) {
     parameters.toLowerCase()
   )}`;
   const requestParamsHash = encodeText(sha256(requestParams).digest("hex"));
-
   const signature = hmacSha256(randStrHash, requestParamsHash);
 
   return {
